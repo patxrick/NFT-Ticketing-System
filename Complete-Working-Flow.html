@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFT Ticketing System - Complete Working Flow</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 60px;
+        }
+
+        .diagram-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .mermaid {
+            text-align: center;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-left: 5px solid #2196f3;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 10px;
+            font-size: 1.1em;
+        }
+
+        .legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .legend-item {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .legend-color {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            margin: 0 auto 10px;
+        }
+
+        .color-start {
+            background: #3b82f6;
+        }
+
+        .color-blockchain {
+            background: #8b5cf6;
+        }
+
+        .color-backend {
+            background: #10b981;
+        }
+
+        .color-success {
+            background: #f59e0b;
+        }
+
+        .color-error {
+            background: #ef4444;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎫 NFT Ticketing System</h1>
+            <p>Complete Working Flow - After MetaMask Connection</p>
+        </div>
+
+        <div class="content">
+            <div class="info-box">
+                <strong>📖 This flowchart shows the complete end-to-end process:</strong><br>
+                From connecting MetaMask → Registering → Creating/Buying Tickets → Downloading NFT → Transferring →
+                Verification
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color color-start"></div>
+                    <strong>User Actions</strong><br>
+                    <small>Blue nodes</small>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color color-blockchain"></div>
+                    <strong>Blockchain</strong><br>
+                    <small>Purple nodes</small>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color color-backend"></div>
+                    <strong>Backend/Database</strong><br>
+                    <small>Green nodes</small>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color color-success"></div>
+                    <strong>Success States</strong><br>
+                    <small>Orange nodes</small>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color color-error"></div>
+                    <strong>Error/Blocked</strong><br>
+                    <small>Red nodes</small>
+                </div>
+            </div>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+                    graph TD
+                    START(["User Opens Website"]) --> CONNECT["Connect MetaMask Wallet"]
+
+                    CONNECT --> WALLET_CONNECTED{"Wallet<br />Connected?"}
+                    WALLET_CONNECTED -->|No| ERROR1["❌ Connection Failed"]
+                    WALLET_CONNECTED -->|Yes| CHECK_USER{"User<br />Registered?"}
+
+                    CHECK_USER -->|No| REGISTER["Sign Up Process"]
+                    REGISTER --> SIGN_MSG["Sign Message with Wallet"]
+                    SIGN_MSG --> CREATE_ACCOUNT["Create Account in MongoDB"]
+                    CREATE_ACCOUNT --> JWT["Receive JWT Token"]
+
+                    CHECK_USER -->|Yes| AUTO_LOGIN["Auto Login with JWT"]
+                    JWT --> CHOOSE_ROLE{"Choose Role"}
+                    AUTO_LOGIN --> CHOOSE_ROLE
+
+                    CHOOSE_ROLE -->|Regular User| USER_PATH["USER PATH"]
+                    CHOOSE_ROLE -->|Organizer| ORG_PATH["ORGANIZER PATH"]
+                    CHOOSE_ROLE -->|Gatekeeper| GATE_PATH["GATEKEEPER PATH"]
+
+                    %% ORGANIZER PATH
+                    ORG_PATH --> CHECK_ORG{"Approved<br />Organizer?"}
+                    CHECK_ORG -->|No| APPLY_ORG["Apply to Become Organizer"]
+                    APPLY_ORG --> WAIT_APPROVAL["Wait for Approval"]
+                    CHECK_ORG -->|Yes| ORG_DASH["Organizer Dashboard"]
+
+                    ORG_DASH --> ORG_ACTIONS{"Actions"}
+                    ORG_ACTIONS -->|Create Event| CREATE_EVENT["Create Event"]
+                    ORG_ACTIONS -->|Manage Gatekeepers| MANAGE_GK["Create Gatekeeper Codes"]
+                    ORG_ACTIONS -->|View Analytics| VIEW_ANALYTICS["View Sales & Entry Logs"]
+
+                    CREATE_EVENT --> FILL_DETAILS["Fill Event Details:<br />Name, Date, Price, Tickets"]
+                    FILL_DETAILS --> UPLOAD_IPFS["Upload Images to IPFS"]
+                    UPLOAD_IPFS --> GET_CID["Get IPFS CIDs"]
+                    GET_CID --> CALL_CONTRACT1["Call Smart Contract<br />createSale"]
+
+                    CALL_CONTRACT1 --> BLOCKCHAIN1["⛓️ Blockchain:<br />• Validate Data<br />• Store Event<br />• Emit
+                    TicketCreated"]
+                    BLOCKCHAIN1 --> INDEXER1["Event Indexer Detects"]
+                    INDEXER1 --> SAVE_DB1["Save Event to MongoDB"]
+                    SAVE_DB1 --> EVENT_LIVE(["✅ Event Live!"])
+
+                    %% USER PATH
+                    USER_PATH --> BROWSE["Browse Available Events"]
+                    BROWSE --> SELECT_EVENT["Select Event"]
+                    SELECT_EVENT --> VIEW_DETAILS["View Event Details"]
+
+                    VIEW_DETAILS --> CHECK_OWNED{"Already Own<br />Ticket?"}
+                    CHECK_OWNED -->|Yes| BLOCKED1["❌ 1 Ticket Per Wallet Limit"]
+                    CHECK_OWNED -->|No| BUY_TICKET["Click Buy Ticket"]
+
+                    BUY_TICKET --> METAMASK_TX["MetaMask Transaction Popup"]
+                    METAMASK_TX --> CONFIRM{"Confirm<br />Payment?"}
+                    CONFIRM -->|No| CANCEL["Purchase Cancelled"]
+
+                    CONFIRM -->|Yes| BLOCKCHAIN2["⛓️ Blockchain:<br />• Verify Price<br />• Transfer ETH to
+                    Organizer<br />• Mint Ticket to User<br />• Update Availability"]
+
+                    BLOCKCHAIN2 --> TX_SUCCESS{"Success?"}
+                    TX_SUCCESS -->|No| ERROR2["❌ Transaction Failed"]
+                    TX_SUCCESS -->|Yes| INDEXER2["Event Indexer Syncs"]
+
+                    INDEXER2 --> SAVE_DB2["Update MongoDB Purchase"]
+                    SAVE_DB2 --> PURCHASE_DONE(["✅ Purchase Complete!"])
+
+                    PURCHASE_DONE --> MY_TICKETS["Go to My Tickets"]
+                    MY_TICKETS --> VIEW_TICKET["View Purchased Ticket"]
+
+                    VIEW_TICKET --> CHECK_DOWNLOADED{"NFT Already<br />Downloaded?"}
+                    CHECK_DOWNLOADED -->|Yes| TICKET_ACTIONS
+                    CHECK_DOWNLOADED -->|No| DOWNLOAD_BTN["Click Download Ticket"]
+
+                    DOWNLOAD_BTN --> CALL_CONTRACT2["Call Smart Contract<br />downloadTicket"]
+                    CALL_CONTRACT2 --> BLOCKCHAIN3["⛓️ Blockchain:<br />• Verify Ownership<br />• Mint ERC721 NFT<br />•
+                    Mark as Downloaded"]
+
+                    BLOCKCHAIN3 --> INDEXER3["Event Indexer Syncs"]
+                    INDEXER3 --> SAVE_DB3["Mark Downloaded in DB"]
+                    SAVE_DB3 --> TICKET_ACTIONS{"Ticket Options"}
+
+                    %% 2FA REVEAL FLOW
+                    TICKET_ACTIONS -->|Reveal Code| REVEAL_BTN["Click Reveal QR"]
+                    REVEAL_BTN --> REQ_OTP["Request OTP (Backend)"]
+                    REQ_OTP --> SEND_EMAIL["📧 Send 6-Digit OTP via Email"]
+                    SEND_EMAIL --> USER_INPUT["User Enters OTP"]
+                    USER_INPUT --> VERIFY_OTP{"Verify OTP"}
+
+                    VERIFY_OTP -->|Invalid| ERROR_OTP["❌ Invalid Code"]
+                    VERIFY_OTP -->|Valid| GEN_TOKEN["Generate Signed JWT (qrToken)"]
+
+                    GEN_TOKEN --> DISPLAY_QR["Display Dynamic QR Code"]
+                    DISPLAY_QR --> TIMER["Starts 30s Refresh Timer"]
+                    TIMER --> REFRESH_QR["Auto-Refresh QR Pattern"]
+
+                    %% TRANSFER FLOW
+                    TICKET_ACTIONS -->|Transfer| TRANSFER_REQ["Request Transfer"]
+                    TRANSFER_REQ --> FILL_TRANSFER["Fill Transfer Form:<br />Recipient Address"]
+                    FILL_TRANSFER --> SUBMIT_TRANSFER["Submit to Backend"]
+                    SUBMIT_TRANSFER --> SAVE_DB4["Save Request to MongoDB"]
+                    SAVE_DB4 --> NOTIFY_ORG["Notify Organizer"]
+
+                    NOTIFY_ORG --> ORG_DECISION{"Organizer<br />Approves?"}
+                    ORG_DECISION -->|No| REJECT["❌ Transfer Rejected"]
+                    ORG_DECISION -->|Yes| CHECK_SECOND{"Already<br />Transferred?"}
+
+                    CHECK_SECOND -->|Yes| BLOCKED2["❌ One-Time Transfer Policy"]
+                    CHECK_SECOND -->|No| CHECK_RECIPIENT{"Recipient<br />Has Ticket?"}
+
+                    CHECK_RECIPIENT -->|Yes| BLOCKED3["❌ Recipient Already Owns"]
+                    CHECK_RECIPIENT -->|No| EXECUTE_TRANSFER["Organizer Calls<br />adminTransferTicket"]
+
+                    EXECUTE_TRANSFER --> BLOCKCHAIN4["⛓️ Blockchain:<br />• Remove from Sender<br />• Add to
+                    Recipient<br />• Mark as Second Hand<br />• Transfer NFT"]
+
+                    BLOCKCHAIN4 --> INDEXER4["Event Indexer Syncs"]
+                    INDEXER4 --> SAVE_DB5["Update MongoDB Ownership"]
+                    SAVE_DB5 --> TRANSFER_DONE(["✅ Transfer Complete!"])
+
+                    %% GATEKEEPER PATH
+                    GATE_PATH --> GK_LOGIN["Login with Access Code"]
+                    GK_LOGIN --> GK_SCANNER["Open QR Scanner"]
+
+                    GK_SCANNER --> SCAN_QR["Scan User's Dynamic QR"]
+                    SCAN_QR --> DECODE_JWT["Decode JWT & Verify Signature"]
+
+                    DECODE_JWT --> CHECK_DB_ENTRY{"Check DB State"}
+                    CHECK_DB_ENTRY -->|Used/Duplicate| REJECT_ENTRY["❌ DENY: Already Used"]
+                    CHECK_DB_ENTRY -->|Valid| LOG_ENTRY["✅ ALLOW: Log Entry in DB"]
+
+                    %% Styles
+                    style START fill:#3b82f6,color:#fff
+                    style CONNECT fill:#3b82f6,color:#fff
+                    style BLOCKCHAIN1 fill:#8b5cf6,color:#fff
+                    style BLOCKCHAIN2 fill:#8b5cf6,color:#fff
+                    style BLOCKCHAIN3 fill:#8b5cf6,color:#fff
+                    style BLOCKCHAIN4 fill:#8b5cf6,color:#fff
+                    style EVENT_LIVE fill:#f59e0b,color:#fff
+                    style PURCHASE_DONE fill:#f59e0b,color:#fff
+                    style TRANSFER_DONE fill:#f59e0b,color:#fff
+                    style LOG_ENTRY fill:#f59e0b,color:#fff
+                    style REJECT_ENTRY fill:#ef4444,color:#fff
+                    style ERROR1 fill:#ef4444,color:#fff
+                    style ERROR2 fill:#ef4444,color:#fff
+                    style BLOCKED1 fill:#ef4444,color:#fff
+                    style BLOCKED2 fill:#ef4444,color:#fff
+                    style BLOCKED3 fill:#ef4444,color:#fff
+                    style SEND_EMAIL fill:#10b981,color:#fff
+                    style GEN_TOKEN fill:#10b981,color:#fff
+                </div>
+            </div>
+
+            <div class="info-box" style="margin-top: 40px;">
+                <strong>🔑 Key Points:</strong>
+                <ul style="margin-top: 10px; margin-left: 20px;">
+                    <li><strong>MetaMask Connection</strong> - Required for all blockchain interactions</li>
+                    <li><strong>Smart Contract</strong> - All ticket operations happen on-chain (purple nodes)</li>
+                    <li><strong>Event Indexer</strong> - Automatically syncs blockchain events to MongoDB</li>
+                    <li><strong>One Ticket Per Wallet</strong> - Enforced by smart contract</li>
+                    <li><strong>2FA Security</strong> - Email OTP required to reveal QR codes (prevents wallet theft)
+                    </li>
+                    <li><strong>Dynamic QR Codes</strong> - Refresh every 30s to prevent screenshot attacks</li>
+                    <li><strong>Gatekeeper App</strong> - Dedicated scanner for event staff to verify entrance</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis',
+                padding: 20
+            }
+        });
+    </script>
+</body>
+
+</html>
